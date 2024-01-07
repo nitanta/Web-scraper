@@ -7,10 +7,9 @@ from urllib.parse import urlparse, urljoin
 from nepalitokenizers import WordPiece
 # importing from the HuggingFace tokenizers package
 from tokenizers.processors import TemplateProcessing
+import numpy as np
 
-# keywords = ["समाचार", "आम निर्वाचन २०७९", "विचार", "राजनीति"]
-keywords = ["राजनीति"]
-
+keywords = ["समाचार", "आम निर्वाचन २०७९", "विचार", "राजनीति"]
 
 def setopati(query):
     # Search from 2023 to 2024
@@ -140,7 +139,6 @@ def preprocess_text(text):
 
     # stemmer = SnowballStemmer('nepali')
     # words = [stemmer.stem(word) for word in words]
-    print(words)
     return words
 
 def compute_term_frequencies(words):
@@ -158,9 +156,18 @@ def plot_term_frequencies(term_frequencies, genre):
     plt.yticks(fontproperties=property)
     plt.show()
 
+def save(query, data):
+    with open(f"corpus/{query}.txt", "w") as file:
+    # Write each item in the list to a new line in the file
+        for item in data:
+            file.write("%s\n" % item)
+
 # Implement similar logic for political leaders and parties analysis
 
 for query in keywords:
     data = fetch_data(query)
     result_string = ' '.join([item["title"] for item in data])
-    plot_term_frequencies(compute_term_frequencies(preprocess_text(result_string)), query)
+    preprocessed_word = preprocess_text(result_string)
+    print(preprocessed_word)
+    save(query, preprocessed_word)
+    plot_term_frequencies(compute_term_frequencies(preprocessed_word), query)
