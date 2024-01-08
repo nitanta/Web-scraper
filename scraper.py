@@ -7,9 +7,11 @@ from urllib.parse import urlparse, urljoin
 from nepalitokenizers import WordPiece
 # importing from the HuggingFace tokenizers package
 from tokenizers.processors import TemplateProcessing
-import numpy as np
+from nepali_stemmer.stemmer import NepStemmer
+import re
 
-keywords = ["समाचार", "आम निर्वाचन २०७९", "विचार", "राजनीति"]
+# keywords = ["समाचार", "आम निर्वाचन २०७९", "विचार", "राजनीति"]
+keywords = ["समाचार"]
 
 def setopati(query):
     # Search from 2023 to 2024
@@ -125,12 +127,19 @@ def load_stop_words(file_path):
     return stop_words
 
 def preprocess_text(text):
+
+    clean_text = re.sub(r'\d+', '', text) # Remove digits
+    clean_text = re.sub(r'[!@#$%^&*()_+\-={}[\]|\\:;"\'<>,.?/]', '', clean_text) # Remove special characters
+
+    nepstem = NepStemmer()
+    stemmed_text = nepstem.stem(clean_text)
+
     tokenizer_sp = WordPiece()
 
     # change the post processor to not add any special tokens
     # treat tokenizer_sp as HuggingFace's Tokenizer object
     tokenizer_sp.post_processor = TemplateProcessing()
-    tokens = tokenizer_sp.encode(text)
+    tokens = tokenizer_sp.encode(stemmed_text)
 
     words = tokens.tokens
 
