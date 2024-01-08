@@ -10,8 +10,7 @@ from tokenizers.processors import TemplateProcessing
 from nepali_stemmer.stemmer import NepStemmer
 import re
 
-# keywords = ["समाचार", "आम निर्वाचन २०७९", "विचार", "राजनीति"]
-keywords = ["समाचार"]
+keywords = ["समाचार", "आम निर्वाचन २०७९", "विचार", "राजनीति"]
 
 def setopati(query):
     # Search from 2023 to 2024
